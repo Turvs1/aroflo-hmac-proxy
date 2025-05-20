@@ -34,15 +34,18 @@ export default async function handler(req, res) {
 
     const raw = await response.text();
 
-    // Try parse if it's JSON, otherwise return as-is
-    try {
-      const json = JSON.parse(raw);
-      return res.status(200).json(json);
-    } catch {
-      return res.status(200).send(raw);
-    }
+    return res.status(200).json({
+      debug: {
+        afdatetimeutc,
+        hostIP,
+        baseString,
+        hmac,
+        pEncoded,
+        url: apiUrl
+      },
+      response: raw
+    });
   } catch (err) {
-    console.error('Proxy error:', err);
-    return res.status(500).json({ error: 'Proxy server failed', message: err.message });
+    return res.status(500).json({ error: 'Server error', message: err.message });
   }
 }
